@@ -1,7 +1,7 @@
 {
   "name": "e-commerce-app",
   "version": "1.0.0",
-  "description": "",
+  "description": "React + NextJS based app for e-commerce",
   "main": "index.js",
   "scripts": {
     "dev": "next",
