@@ -1,6 +1,8 @@
 import React, { CSSProperties } from 'react'
 import PropTypes from 'prop-types'
 import Head from 'next-server/head'
+import { DefaultErrorIProps } from 'next/error'
+import { NextContext } from 'next';
 
 // TODO Add better types
 const statusCodes: any = {
@@ -9,15 +11,20 @@ const statusCodes: any = {
   500: 'Internal Server Error',
   501: 'Not Implemented'
 }
-
-interface InitialProps {
-  statusCode: number
+interface ErrorNextContext extends NextContext {
+  err?: {
+    name: string
+    message: string
+    stack?: string
+    statusCode: number
+  }
 }
 
-export default class Error extends React.Component<InitialProps> {
+export default class Error<P = {}> extends React.Component<P & DefaultErrorIProps> {
   static displayName = 'ErrorPage'
 
-  static getInitialProps ({ res, err }): InitialProps {
+  static getInitialProps (context: ErrorNextContext): Promise<DefaultErrorIProps> | DefaultErrorIProps {
+    const { res, err } = context
     const statusCode =
       res && res.statusCode ? res.statusCode : err ? err.statusCode : 404
     return { statusCode }
@@ -51,7 +58,7 @@ export default class Error extends React.Component<InitialProps> {
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  // TODO
+  // TODO fix TS
   Error.propTypes = {
     statusCode: PropTypes.number
   }
