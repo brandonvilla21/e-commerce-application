@@ -20,7 +20,7 @@ interface ErrorNextContext extends NextContext {
   }
 }
 
-export default class Error<P = {}> extends React.Component<P & DefaultErrorIProps> {
+export default class MyError<P = {}> extends React.Component<P & DefaultErrorIProps> {
   static displayName = 'ErrorPage'
 
   static getInitialProps (context: ErrorNextContext): Promise<DefaultErrorIProps> | DefaultErrorIProps {
@@ -59,7 +59,7 @@ export default class Error<P = {}> extends React.Component<P & DefaultErrorIProp
 
 if (process.env.NODE_ENV !== 'production') {
   // TODO fix TS
-  Error.propTypes = {
+  MyError.propTypes = {
     statusCode: PropTypes.number
   }
 }
