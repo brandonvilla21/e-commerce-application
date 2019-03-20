@@ -28,5 +28,9 @@
     "react": "^16.8.4",
     "react-apollo": "^2.5.2",
     "react-dom": "^16.8.4"
+  },
+  "devDependencies": {
+    "dotenv": "^7.0.0",
+    "dotenv-webpack": "^1.7.0"
   }
 }
