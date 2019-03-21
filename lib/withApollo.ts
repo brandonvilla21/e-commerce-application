@@ -1,20 +1,22 @@
 import withApollo from 'next-with-apollo'
-import ApolloClient  from 'apollo-boost'
+import ApolloClient, { Operation }  from 'apollo-boost'
 
 // TODO fix any type
 function createClient(client: any) {
   const { headers } = client
   return new ApolloClient({
     uri: process.env.GRAPHQL_URL,
-    // Not working due incompatible Types
-    // request: operation => {
-    //   operation.setContext({
-    //     fetchOptions: {
-    //       credentials: 'true'
-    //     },
-    //     headers,
-    //   })
-    // }
+    request: (operation: Operation) => {
+      return new Promise((resolve) => {
+        operation.setContext({
+          fetchOptions: {
+            credentials: 'true'
+          },
+          headers,
+        })
+        resolve()
+      })
+    }
   })
 }
 
