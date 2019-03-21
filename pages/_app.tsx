@@ -1,8 +1,15 @@
 import React from 'react'
 import App, { Container, NextAppContext } from 'next/app'
+import { ApolloProvider } from 'react-apollo'
+import { WithApolloClient } from 'react-apollo/withApollo'
+import withApollo from '../lib/withApollo'
 import Page from '../components/Page'
+import { ApolloClient } from 'apollo-boost'
 
-class MyApp extends App {
+interface MyAppProps {
+  apollo: ApolloClient<any>
+}
+class MyApp extends App<WithApolloClient<MyAppProps>> {
   static async getInitialProps(context: NextAppContext) {
     const { Component, ctx } = context
     let pageProps = {}
@@ -15,16 +22,18 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props
+    const { Component, pageProps, apollo } = this.props
 
     return (
       <Container>
-        <Page>
-          <Component {...pageProps} />
-        </Page>
+        <ApolloProvider client={apollo}>
+          <Page>
+            <Component {...pageProps} />
+          </Page>
+        </ApolloProvider>
       </Container>
     )
   }
 }
 
-export default MyApp
+export default withApollo(MyApp)
