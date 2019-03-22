@@ -1,7 +1,7 @@
 import withApollo from 'next-with-apollo'
 import ApolloClient, { Operation }  from 'apollo-boost'
 
-// TODO fix any type
+// TODO fix type
 function createClient(client: any) {
   const { headers } = client
   return new ApolloClient({
