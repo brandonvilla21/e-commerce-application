@@ -8,7 +8,7 @@ import { WithApolloClient } from 'react-apollo/withApollo'
 import withApollo from '../lib/withApollo'
 import Page from '../components/Page'
 import { ApolloClient } from 'apollo-boost'
-import getPageContext from '../lib/getPageContext';
+import withPageContext, { PageContext } from '../lib/withPageContext';
 import { StylesProvider, ThemeProvider } from '@material-ui/styles';
 import { CssBaseline } from '@material-ui/core';
 
@@ -16,10 +16,11 @@ interface MyAppProps {
   apollo: ApolloClient<any>
 }
 class MyApp extends App<WithApolloClient<MyAppProps>> {
+  private pageContext: PageContext
   constructor() {
     // @ts-ignore
     super()
-    this.pageContext = getPageContext()
+    this.pageContext = withPageContext()
   }
   
   componentDidMount() {
