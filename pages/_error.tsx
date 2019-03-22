@@ -1,10 +1,8 @@
-import React, { CSSProperties } from 'react'
-import PropTypes from 'prop-types'
-import Head from 'next-server/head'
-import { DefaultErrorIProps } from 'next/error'
+import React from 'react'
+import Error, { DefaultErrorIProps } from 'next/error'
 import { NextContext } from 'next';
 
-// TODO Add better types
+// TODO Add better types (or enums if fits)
 const statusCodes: any = {
   400: 'Bad Request',
   404: 'This page could not be found',
@@ -21,8 +19,6 @@ interface ErrorNextContext extends NextContext {
 }
 
 export default class MyError<P = {}> extends React.Component<P & DefaultErrorIProps> {
-  static displayName = 'ErrorPage'
-
   static getInitialProps (context: ErrorNextContext): Promise<DefaultErrorIProps> | DefaultErrorIProps {
     const { res, err } = context
     const statusCode =
@@ -32,79 +28,8 @@ export default class MyError<P = {}> extends React.Component<P & DefaultErrorIPr
 
   render () {
     const { statusCode } = this.props
-    const title = statusCodes[statusCode] || 'An unexpected error has occurred'
-
     return (
-      <div style={styles.error}>
-        <Head>
-          <meta
-            name='viewport'
-            content='width=device-width, initial-scale=1.0'
-          />
-          <title>
-            {statusCode}: {title}
-          </title>
-        </Head>
-        <div>
-          <style dangerouslySetInnerHTML={{ __html: 'body { margin: 0 }' }} />
-          {statusCode ? <h1 style={styles.h1}>{statusCode}</h1> : null}
-          <div style={styles.desc}>
-            <h2 style={styles.h2}>{title}.</h2>
-          </div>
-        </div>
-      </div>
+      <Error statusCode={statusCode} />
     )
-  }
-}
-
-if (process.env.NODE_ENV !== 'production') {
-  // TODO fix TS
-  MyError.propTypes = {
-    statusCode: PropTypes.number
-  }
-}
-
-interface CustomStyles {
-  [key: string]: CSSProperties
-}
-
-const styles: CustomStyles = {
-  error: {
-    color: '#000',
-    background: '#fff',
-    fontFamily:  '-apple-system, BlinkMacSystemFont, Roboto, "Segoe UI", "Fira Sans", Avenir, "Helvetica Neue", "Lucida Grande", sans-serif',
-    height: '100vh',
-    textAlign: 'center',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-
-  desc: {
-    display: 'inline-block',
-    textAlign: 'left',
-    lineHeight: '49px',
-    height: '49px',
-    verticalAlign: 'middle'
-  },
-
-  h1: {
-    display: 'inline-block',
-    borderRight: '1px solid rgba(0, 0, 0,.3)',
-    margin: 0,
-    marginRight: '20px',
-    padding: '10px 23px 10px 0',
-    fontSize: '24px',
-    fontWeight: 500,
-    verticalAlign: 'top'
-  },
-
-  h2: {
-    fontSize: '14px',
-    fontWeight: 'normal',
-    lineHeight: 'inherit',
-    margin: 0,
-    padding: 0
   }
 }
