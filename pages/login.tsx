@@ -17,13 +17,23 @@ const useStyles = makeStyles({
     justifyContent: 'center'
   }
 });
+interface SubmitResponse<TData> {
+  data: TData
+}
+interface SubmitError {
+  graphQLErrors: []
+  networkError: any
+  message: string
+}
 
 const Login = () => {
   const classes = useStyles()
-  const handleSubmited = (res, err) => {
+
+  const handleSubmited = (res: SubmitResponse<any>, err: SubmitError) => {
     console.log(res)
     console.log(err)
   }
+
   return (
     <div className={classes.root}>
       <Typography className={classes.title} component="h2" variant="h2" gutterBottom>Login</Typography>
