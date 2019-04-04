@@ -10,7 +10,7 @@ function createClient(client: any) {
       return new Promise((resolve) => {
         operation.setContext({
           fetchOptions: {
-            credentials: 'true'
+            credentials: 'include'
           },
           headers,
         })
