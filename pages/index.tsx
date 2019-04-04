@@ -52,6 +52,10 @@ function Index() {
         <Link href="/about">
           <a>About page</a>
         </Link>
+        <br />
+        <Link href="/login">
+          <a>Login page</a>
+        </Link>
       </Typography>
       <Button variant="contained" color="secondary" onClick={handleClick}>
         Click me mate
