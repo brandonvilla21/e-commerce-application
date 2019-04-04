@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { FormEvent, FunctionComponent } from 'react'
 import gql from 'graphql-tag'
-import { Mutation } from 'react-apollo';
+import { Mutation, MutationFn } from 'react-apollo';
 import useInput from '../../../hooks/useInput';
 import { TextField, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
@@ -32,15 +32,22 @@ const LOGIN_MUTATION = gql`
     }
   }
 `;
+interface MutationVariables {
+  email: string
+  password: string
+}
+interface LoginFormProps {
+  onSubmitted: Function
+}
 
-const LoginForm = ({ onSubmitted }) => {
+const LoginForm: FunctionComponent<LoginFormProps> = ({ onSubmitted }) => {
   const email = useInput('email')
   const password = useInput('password')
   const classes = useStyles()
 
-  const handleSubmit = async (event: any, login: any) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>, login: MutationFn<any, MutationVariables>) => {
     try {
-      event.preventDefault();
+      event.preventDefault()
       const response = await login()
       onSubmitted(response, null)
     } catch (err) {
@@ -53,8 +60,8 @@ const LoginForm = ({ onSubmitted }) => {
       mutation={LOGIN_MUTATION}
       variables={{ email: email.value, password: password.value }}
     >
-      {(login, { error, data, loading }) => (
-        <form className={classes.form} method="post" onSubmit={e => handleSubmit(e, login)}>
+      {(login: MutationFn<any, MutationVariables>, { error, data, loading }) => (
+        <form className={classes.form} method="post" onSubmit={(e: FormEvent<HTMLFormElement> ) => handleSubmit(e, login)}>
           {error && <code>{JSON.stringify(error)}</code>}
           {data && <code>{JSON.stringify(data)}</code>}
           {loading && <code>loading...</code>}
