@@ -66,8 +66,8 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ onSubmitted }) => {
           {data && <code>{JSON.stringify(data)}</code>}
           {loading && <code>loading...</code>}
 
-          <TextField {...email} className={classes.textField} />
-          <TextField type="password" {...password} className={classes.textField} />
+          <TextField id="email" {...email} className={classes.textField} />
+          <TextField id="password" type="password" {...password} className={classes.textField} />
           <Button type="submit" variant="contained" color="primary" className={classes.button}>
             Login
           </Button>
