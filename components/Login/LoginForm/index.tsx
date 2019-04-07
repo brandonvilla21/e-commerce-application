@@ -60,14 +60,15 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ onSubmitted }) => {
       mutation={LOGIN_MUTATION}
       variables={{ email: email.value, password: password.value }}
     >
-      {(login: MutationFn<any, MutationVariables>, { error, data, loading }) => (
+      {(login: MutationFn<any, MutationVariables>, { error, data, loading, called }) => (
         <form className={classes.form} method="post" onSubmit={(e: FormEvent<HTMLFormElement> ) => handleSubmit(e, login)}>
           {error && <code>{JSON.stringify(error)}</code>}
           {data && <code>{JSON.stringify(data)}</code>}
           {loading && <code>loading...</code>}
+          {!error && !loading && called && <p>Successful login!</p>}
 
-          <TextField {...email} className={classes.textField} />
-          <TextField type="password" {...password} className={classes.textField} />
+          <TextField id="email" {...email} className={classes.textField} />
+          <TextField id="password" type="password" {...password} className={classes.textField} />
           <Button type="submit" variant="contained" color="primary" className={classes.button}>
             Login
           </Button>
@@ -77,4 +78,5 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ onSubmitted }) => {
   )
 }
 
-export default LoginForm
+export default LoginForm;
+export { LOGIN_MUTATION };
