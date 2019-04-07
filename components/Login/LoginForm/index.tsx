@@ -78,4 +78,5 @@ const LoginForm: FunctionComponent<LoginFormProps> = ({ onSubmitted }) => {
   )
 }
 
-export default LoginForm
+export default LoginForm;
+export { LOGIN_MUTATION };
