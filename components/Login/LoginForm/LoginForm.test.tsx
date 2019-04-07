@@ -1,7 +1,5 @@
 import React from 'react';
-import { render, fireEvent, cleanup, waitForElement } from 'react-testing-library';
-// this adds custom jest matchers from jest-dom
-import 'jest-dom/extend-expect';
+import { render, fireEvent, waitForElement } from 'react-testing-library';
 import { MockedProvider } from 'react-apollo/test-utils';
 import LoginForm, { LOGIN_MUTATION } from './index';
 
@@ -35,9 +33,6 @@ const mocks = [
     },
   }
 ];
-
-// automatically unmount and cleanup DOM after the test is finished.
-afterEach(cleanup);
 
 describe('<LoginFrom/>', () => {
   it('should fill the email and password fields and login in', async () => {
