@@ -16,7 +16,7 @@ $ npm install
 
 | Env variable　　　　　　　　　　　　　| Description 　　　　　　　　| Example |
 | :--  | :--         | :--         |
-| `GRAPHQL_API` | This is the endpoint to the GraphQL server. | GRAPHQL_API=http://localhost:4466/
+| `GRAPHQL_URL` | This is the endpoint to the GraphQL server. | GRAPHQL_URL=http://localhost:4000/
 
 ### 3. Run the application
 
