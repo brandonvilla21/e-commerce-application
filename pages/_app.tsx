@@ -4,6 +4,7 @@ import '../lib/bootstrap';
 import React from 'react'
 import App, { Container, NextAppContext } from 'next/app'
 import { ApolloProvider } from 'react-apollo'
+import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks'
 import { WithApolloClient } from 'react-apollo/withApollo'
 import withApollo from '../lib/withApollo'
 import Page from '../components/Page'
@@ -48,6 +49,7 @@ class MyApp extends App<WithApolloClient<MyAppProps>> {
     return (
       <Container>
         <ApolloProvider client={apollo}>
+        <ApolloHooksProvider client={apollo}>
           <Page>
             {/* Wrap every page in Styles and Theme providers */}
             <StylesProvider
@@ -63,6 +65,7 @@ class MyApp extends App<WithApolloClient<MyAppProps>> {
               </ThemeProvider>
             </StylesProvider>
           </Page>
+          </ApolloHooksProvider>
         </ApolloProvider>
       </Container>
     )

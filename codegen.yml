@@ -1,0 +1,16 @@
+overwrite: true
+schema: "http://localhost:4000"
+documents: "components/**/*.{ts,tsx}"
+generates:
+  components/generated/apollo-components.tsx:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false
+  graphql.schema.json:
+    plugins:
+      - "introspection"
