@@ -317,6 +317,18 @@ export type User = {
   name: Scalars["String"];
   posts: Array<Post>;
 };
+export type CreateItemMutationVariables = {
+  title: Scalars["String"];
+  description: Scalars["String"];
+  price: Scalars["Int"];
+  image?: Maybe<Scalars["String"]>;
+  largeImage?: Maybe<Scalars["String"]>;
+};
+
+export type CreateItemMutation = { __typename?: "Mutation" } & {
+  createItem: { __typename?: "Item" } & Pick<Item, "id">;
+};
+
 export type LoginMutationVariables = {
   email: Scalars["String"];
   password: Scalars["String"];
@@ -331,6 +343,37 @@ export type LoginMutation = { __typename?: "Mutation" } & {
 import gql from "graphql-tag";
 import * as ReactApolloHooks from "react-apollo-hooks";
 
+export const CreateItemDocument = gql`
+  mutation createItem(
+    $title: String!
+    $description: String!
+    $price: Int!
+    $image: String
+    $largeImage: String
+  ) {
+    createItem(
+      title: $title
+      description: $description
+      price: $price
+      image: $image
+      largeImage: $largeImage
+    ) {
+      id
+    }
+  }
+`;
+
+export function useCreateItemMutation(
+  baseOptions?: ReactApolloHooks.MutationHookOptions<
+    CreateItemMutation,
+    CreateItemMutationVariables
+  >
+) {
+  return ReactApolloHooks.useMutation<
+    CreateItemMutation,
+    CreateItemMutationVariables
+  >(CreateItemDocument, baseOptions);
+}
 export const LoginDocument = gql`
   mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
