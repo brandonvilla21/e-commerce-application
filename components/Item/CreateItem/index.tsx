@@ -12,6 +12,8 @@ import {
 } from '../../generated/apollo-components';
 import useForm from '../../../hooks/useForm';
 import SelectImage from './components/selectImage';
+import Snackbar from '@material-ui/core/Snackbar';
+import SnackbarContentWrapper from '../../shared/SnackbarContentWrapper';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -66,7 +68,8 @@ function CreateItem() {
   const classes = useStyles();
   const createItem = useCreateItemMutation({ variables: initialState });
   return (
-      <form className={classes.root} onSubmit={e => submitItem(e, createItem, values)}>
+      <>
+        <form className={classes.root} onSubmit={e => submitItem(e, createItem, values)}>
 
         <SelectImage setImageData={setImageData} imageData={imageData}/>
 
@@ -104,7 +107,17 @@ function CreateItem() {
         <Button variant="contained" color="primary" type="submit">
           Registrar artículo
         </Button>
-      </form>
+        </form>
+
+        <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left', }}
+        open={imageData.isImageToLarge}
+        ><SnackbarContentWrapper
+        variant="error"
+        noActions
+        message="La imagen que seleccionaste sobrepasa el límite de 1MB. Por favor selecciona una imagen más ligera."
+      /></Snackbar>
+      </>
   );
 }
 
