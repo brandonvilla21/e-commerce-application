@@ -4,17 +4,22 @@ import Router from 'next/router';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
-import { useCreateItemMutation, CreateItemMutationVariables, CreateItemMutation } from '../../generated/apollo-components';
-import useForm from '../../../hooks/useForm';
 import { MutationFn } from 'react-apollo-hooks';
+import {
+  useCreateItemMutation,
+  CreateItemMutationVariables,
+  CreateItemMutation
+} from '../../generated/apollo-components';
+import useForm from '../../../hooks/useForm';
+import SelectImage from './components/selectImage';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     margin: '25px',
   },
-});
+}));
 
 const CREATE_ITEM_MUTATION = gql`
   mutation createItem(
@@ -57,10 +62,14 @@ function submitItem(
 
 function CreateItem() {
   const { values, handleChange } = useForm(initialState);
+  const [imageData, setImageData] = useState({ selectedImage: null, srcImage: '', isImageToLarge: false });
   const classes = useStyles();
   const createItem = useCreateItemMutation({ variables: initialState });
   return (
       <form className={classes.root} onSubmit={e => submitItem(e, createItem, values)}>
+
+        <SelectImage setImageData={setImageData} imageData={imageData}/>
+
         <TextField
           id="title"
           name="title"
