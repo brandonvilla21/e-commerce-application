@@ -85,7 +85,7 @@ function handleImageSelectedHandler(event: ChangeEvent<HTMLInputElement>, setIma
 }
 
 interface CustomImageData {
-  selectedImage: HTMLInputElement | null;
+  selectedImage: File | null;
   srcImage: string;
   isImageToLarge: boolean;
 }

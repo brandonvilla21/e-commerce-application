@@ -10,11 +10,12 @@ import { MutationFn } from 'react-apollo-hooks';
 import {
   useCreateItemMutation,
   CreateItemMutationVariables,
-  CreateItemMutation
+  CreateItemMutation,
 } from '../../generated/apollo-components';
 import useForm from '../../../hooks/useForm';
 import SelectImage from './components/selectImage';
 import SnackbarContentWrapper from '../../shared/SnackbarContentWrapper';
+import Dinero from 'dinero.js';
 
 const blueGrey100 = blueGrey['100'];
 
@@ -49,12 +50,14 @@ const CREATE_ITEM_MUTATION = gql`
     $title: String!
     $description: String!
     $price: Int!
+    $imageFile: Upload!
     $image: String
     $largeImage: String
   ) {
     createItem(
       title: $title
       description: $description
+      imageFile: $imageFile
       price: $price
       image: $image
       largeImage: $largeImage
@@ -67,26 +70,38 @@ const CREATE_ITEM_MUTATION = gql`
 const initialState: CreateItemMutationVariables = {
   title: '',
   description: '',
+  imageFile: null,
   image: '',
   largeImage: '',
   price: 0,
 };
 
-function submitItem(
+async function submitItem(
   event: React.FormEvent<HTMLFormElement>,
   createItem: MutationFn<CreateItemMutation, CreateItemMutationVariables>,
-  item: CreateItemMutationVariables
-
+  item: { description: string; title: string; price: string },
+  imageData: { selectedImage: File | null; srcImage: string; isImageToLarge: boolean }
 ) {
   event.preventDefault();
-  console.log(item);
-  // createItem({variables: item});
+  const formatedPrice = item.price.replace(/[.,\s]/g, '');
+  const price = Dinero({ amount: parseInt(formatedPrice), currency: 'MXN' });
+  const amount = price.getAmount();
+
+  const res = await createItem({
+    variables: {
+      title: item.title,
+      description: item.description, 
+      imageFile: imageData.selectedImage,
+      // Multiply for 100, because we are storing cents.
+      price: amount,
+    }
+  });
 };
 
 function isFormValid(
-  item: CreateItemMutationVariables,
+  item: { description: string; title: string; price: number },
   imageData: {
-    selectedImage: null,
+    selectedImage: null | File,
     srcImage: string,
     isImageToLarge: boolean,
   },
@@ -97,14 +112,24 @@ function isFormValid(
          imageData.isImageToLarge;
 }
 
+interface SelectImageData {
+  selectedImage: null | File, 
+  srcImage: '',
+  isImageToLarge: false
+};
+
 function CreateItem() {
-  const { values, handleChange } = useForm(initialState);
-  const [imageData, setImageData] = useState({ selectedImage: null, srcImage: '', isImageToLarge: false });
+  const { values, handleChange } = useForm({
+    description: initialState.description,
+    title:initialState.title,
+    price: initialState.price,
+  });
+  const [imageData, setImageData] = useState<SelectImageData>({ selectedImage: null, srcImage: '', isImageToLarge: false });
   const classes = useStyles();
   const createItem = useCreateItemMutation({ variables: initialState });
   return (
       <>
-        <form className={classes.root} onSubmit={e => submitItem(e, createItem, values)}>
+        <form className={classes.root} onSubmit={e => submitItem(e, createItem, values, imageData)}>
 
           <SelectImage setImageData={setImageData} imageData={imageData}/>
 
@@ -128,10 +153,10 @@ function CreateItem() {
               label="Precio"
               placeholder="Ingrese el precio de su artículo"
               margin="normal"
-              value={values.price}
+              value={String(Number(values.price).toFixed(2))}
               onChange={handleChange}
               type="number"
-              InputProps={{ inputProps: { min: 0 } }}
+              InputProps={{ inputProps: { min: 0, step: ".01" } }}
               variant="outlined"
             />
           </div>

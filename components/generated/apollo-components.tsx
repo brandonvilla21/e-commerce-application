@@ -7,6 +7,8 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: any;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
 };
 
 export type AuthPayload = {
@@ -267,9 +269,10 @@ export type MutationDeletePostArgs = {
 };
 
 export type MutationCreateItemArgs = {
-  title?: Maybe<Scalars["String"]>;
-  description?: Maybe<Scalars["String"]>;
-  price?: Maybe<Scalars["Int"]>;
+  title: Scalars["String"];
+  description: Scalars["String"];
+  price: Scalars["Int"];
+  imageFile: Scalars["Upload"];
   image?: Maybe<Scalars["String"]>;
   largeImage?: Maybe<Scalars["String"]>;
 };
@@ -321,6 +324,7 @@ export type CreateItemMutationVariables = {
   title: Scalars["String"];
   description: Scalars["String"];
   price: Scalars["Int"];
+  imageFile: Scalars["Upload"];
   image?: Maybe<Scalars["String"]>;
   largeImage?: Maybe<Scalars["String"]>;
 };
@@ -348,12 +352,14 @@ export const CreateItemDocument = gql`
     $title: String!
     $description: String!
     $price: Int!
+    $imageFile: Upload!
     $image: String
     $largeImage: String
   ) {
     createItem(
       title: $title
       description: $description
+      imageFile: $imageFile
       price: $price
       image: $image
       largeImage: $largeImage
