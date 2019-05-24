@@ -16,6 +16,7 @@ import useForm from '../../../hooks/useForm';
 import SelectImage from './components/selectImage';
 import SnackbarContentWrapper from '../../shared/SnackbarContentWrapper';
 import Dinero from 'dinero.js';
+import NumberMaterialInputFormat from '../../shared/NumberMaterialInputFormat';
 
 const blueGrey100 = blueGrey['100'];
 
@@ -79,23 +80,24 @@ const initialState: CreateItemMutationVariables = {
 async function submitItem(
   event: React.FormEvent<HTMLFormElement>,
   createItem: MutationFn<CreateItemMutation, CreateItemMutationVariables>,
-  item: { description: string; title: string; price: string },
+  item: { description: string; title: string; price: number },
   imageData: { selectedImage: File | null; srcImage: string; isImageToLarge: boolean }
-) {
+  ) {
+  console.log('item: ', item);
   event.preventDefault();
-  const formatedPrice = item.price.replace(/[.,\s]/g, '');
-  const price = Dinero({ amount: parseInt(formatedPrice), currency: 'MXN' });
-  const amount = price.getAmount();
+  console.log('formatedPrice: ', item.price);
+  const price = Dinero({ amount: item.price, currency: 'MXN' });
+  // const amount = price.getAmount();
 
-  const res = await createItem({
-    variables: {
-      title: item.title,
-      description: item.description, 
-      imageFile: imageData.selectedImage,
-      // Multiply for 100, because we are storing cents.
-      price: amount,
-    }
-  });
+  // const res = await createItem({
+  //   variables: {
+  //     title: item.title,
+  //     description: item.description,
+  //     imageFile: imageData.selectedImage,
+  //     // Multiply for 100, because we are storing cents.
+  //     price: amount,
+  //   }
+  // });
 };
 
 function isFormValid(
@@ -122,14 +124,15 @@ function CreateItem() {
   const { values, handleChange } = useForm({
     description: initialState.description,
     title:initialState.title,
-    price: initialState.price,
   });
   const [imageData, setImageData] = useState<SelectImageData>({ selectedImage: null, srcImage: '', isImageToLarge: false });
   const classes = useStyles();
   const createItem = useCreateItemMutation({ variables: initialState });
+  const [price, setPrice] = useState(0);
+
   return (
       <>
-        <form className={classes.root} onSubmit={e => submitItem(e, createItem, values, imageData)}>
+        <form className={classes.root} onSubmit={e => submitItem(e, createItem, { ...values, price}, imageData)}>
 
           <SelectImage setImageData={setImageData} imageData={imageData}/>
 
@@ -146,18 +149,26 @@ function CreateItem() {
               type="text"
               variant="outlined"
             />
-            <TextField
-              className={classes.field}
-              id="price"
-              name="price"
-              label="Precio"
-              placeholder="Ingrese el precio de su artículo"
-              margin="normal"
-              value={String(Number(values.price).toFixed(2))}
-              onChange={handleChange}
-              type="number"
-              InputProps={{ inputProps: { min: 0, step: ".01" } }}
-              variant="outlined"
+
+            <NumberMaterialInputFormat
+              propsNumberFormat={{
+                allowNegative: false,
+                decimalScale: 2,
+                value: price,
+                prefix: '$ ',
+                thousandSeparator: true,
+                onValueChange: ({floatValue}: { floatValue: number }) => setPrice(floatValue)
+              }}
+
+              propsTextField={{
+                className: classes.field,
+                id: 'price',
+                name: 'price',
+                label: 'precio',
+                placeholder: 'Ingrese el precio de su artículo',
+                margin: 'normal',
+                variant: 'outlined',
+              }}
             />
           </div>
 
@@ -176,7 +187,7 @@ function CreateItem() {
           />
 
           <div className={classes.buttonContainer}>
-            <Button disabled={isFormValid(values, imageData)} className={classes.button} variant="contained" color="primary" type="submit">
+            <Button disabled={isFormValid({ ...values, price}, imageData)} className={classes.button} variant="contained" color="primary" type="submit">
               Registrar artículo
             </Button>
           </div>

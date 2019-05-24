@@ -35,7 +35,8 @@
     "react": "^16.8.4",
     "react-apollo": "^2.5.2",
     "react-apollo-hooks": "^0.4.5",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "react-number-format": "^4.0.8"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.3.3",
