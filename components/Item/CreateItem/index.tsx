@@ -5,8 +5,10 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import blueGrey from '@material-ui/core/colors/blueGrey';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/styles';
 import { MutationFn } from 'react-apollo-hooks';
+import Dinero from 'dinero.js';
 import {
   useCreateItemMutation,
   CreateItemMutationVariables,
@@ -15,8 +17,8 @@ import {
 import useForm from '../../../hooks/useForm';
 import SelectImage from './components/selectImage';
 import SnackbarContentWrapper from '../../shared/SnackbarContentWrapper';
-import Dinero from 'dinero.js';
 import NumberMaterialInputFormat from '../../shared/NumberMaterialInputFormat';
+import wait from '../../shared/helper-functions/wait';
 
 const blueGrey100 = blueGrey['100'];
 
@@ -80,22 +82,31 @@ const initialState: CreateItemMutationVariables = {
 async function submitItem(
   event: React.FormEvent<HTMLFormElement>,
   createItem: MutationFn<CreateItemMutation, CreateItemMutationVariables>,
+  setIsSubmitting: React.Dispatch<React.SetStateAction<boolean>>,
   item: { description: string; title: string; price: number },
   imageData: { selectedImage: File | null; srcImage: string; isImageToLarge: boolean }
   ) {
     event.preventDefault();
     const priceCents = toCents({ amount: item.price }).getAmount();
 
-    await createItem({
-      variables: {
-        title: item.title,
-        description: item.description,
-        imageFile: imageData.selectedImage,
-        price: priceCents,
-      }
-    });
+    setIsSubmitting(true);
 
-  Router.push('/');
+    await Promise.all([
+      createItem({
+        variables: {
+          title: item.title,
+          description: item.description,
+          imageFile: imageData.selectedImage,
+          price: priceCents,
+        }
+      }),
+      // Wait at least 1.5 seconds to avoid abrupt UI changes. Little UX enhancement.
+      wait(1500),
+    ]);
+
+    setIsSubmitting(false);
+
+    Router.push('/');
 };
 
 interface ToCentsProps {
@@ -134,13 +145,14 @@ function CreateItem() {
     title:initialState.title,
   });
   const [imageData, setImageData] = useState<SelectImageData>({ selectedImage: null, srcImage: '', isImageToLarge: false });
-  const classes = useStyles();
-  const createItem = useCreateItemMutation({ variables: initialState });
   const [price, setPrice] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const createItem = useCreateItemMutation({ variables: initialState });
+  const classes = useStyles();
 
   return (
       <>
-        <form className={classes.root} onSubmit={e => submitItem(e, createItem, { ...values, price}, imageData)}>
+        <form className={classes.root} onSubmit={e => submitItem(e, createItem, setIsSubmitting, { ...values, price}, imageData)}>
 
           <SelectImage setImageData={setImageData} imageData={imageData}/>
 
@@ -199,6 +211,7 @@ function CreateItem() {
               Registrar artículo
             </Button>
           </div>
+          {isSubmitting ? <LinearProgress variant="query" />: null}
         </form>
 
         <Snackbar
