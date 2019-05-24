@@ -83,22 +83,30 @@ async function submitItem(
   item: { description: string; title: string; price: number },
   imageData: { selectedImage: File | null; srcImage: string; isImageToLarge: boolean }
   ) {
-  console.log('item: ', item);
-  event.preventDefault();
-  console.log('formatedPrice: ', item.price);
-  const price = Dinero({ amount: item.price, currency: 'MXN' });
-  // const amount = price.getAmount();
+    event.preventDefault();
+    const priceCents = toCents({ amount: item.price }).getAmount();
 
-  // const res = await createItem({
-  //   variables: {
-  //     title: item.title,
-  //     description: item.description,
-  //     imageFile: imageData.selectedImage,
-  //     // Multiply for 100, because we are storing cents.
-  //     price: amount,
-  //   }
-  // });
+    await createItem({
+      variables: {
+        title: item.title,
+        description: item.description,
+        imageFile: imageData.selectedImage,
+        price: priceCents,
+      }
+    });
+
+  Router.push('/');
 };
+
+interface ToCentsProps {
+  amount: number,
+  factor?: number,
+  currency?: string,
+}
+function toCents({ amount, factor = Math.pow(10, 2), currency = 'MXN'}: ToCentsProps) {
+  const dineroInstance = Dinero({ amount: Math.round(amount * factor), currency });
+  return dineroInstance;
+}
 
 function isFormValid(
   item: { description: string; title: string; price: number },
@@ -164,7 +172,7 @@ function CreateItem() {
                 className: classes.field,
                 id: 'price',
                 name: 'price',
-                label: 'precio',
+                label: 'Precio',
                 placeholder: 'Ingrese el precio de su artículo',
                 margin: 'normal',
                 variant: 'outlined',
