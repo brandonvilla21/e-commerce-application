@@ -130,11 +130,15 @@ function selectImage({ setImageData, imageData }: SelectImageProps) {
         {image}
 
       </div>
-      <input 
+      <input
+        data-testid="select-an-image-input"
         style={{ display: 'none' }}
         ref={fileInput}
         type="file" 
-        onChange={event => handleImageSelectedHandler(event, setImageData)} 
+        onChange={event => {
+          event.persist();
+          handleImageSelectedHandler(event, setImageData);
+        }}
         accept="image/png, image/jpeg, image/jpg, image/gif"
       />
 
