@@ -119,15 +119,15 @@ function toCents({ amount, factor = Math.pow(10, 2), currency = 'MXN'}: ToCentsP
   return dineroInstance;
 }
 
-function isFormValid(
+function isFormInvalid(
   item: { description: string; title: string; price: number },
   imageData: {
     selectedImage: null | File,
     srcImage: string,
     isImageToLarge: boolean,
   },
-) {
-  return item.description === '' ||
+  ) {
+    return item.description === '' ||
          item.title === '' ||
          !imageData.selectedImage ||
          imageData.isImageToLarge;
@@ -207,7 +207,7 @@ function CreateItem() {
           />
 
           <div className={classes.buttonContainer}>
-            <Button disabled={isFormValid({ ...values, price}, imageData)} className={classes.button} variant="contained" color="primary" type="submit">
+            <Button disabled={isFormInvalid({ ...values, price}, imageData)} className={classes.button} variant="contained" color="primary" type="submit">
               Registrar artículo
             </Button>
           </div>
