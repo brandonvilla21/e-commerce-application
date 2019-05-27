@@ -129,9 +129,18 @@ describe('<CreateItem/>', () => {
     const registerArticle = getByText( 'Registrar artículo' );
     fireEvent.submit(registerArticle);
 
+    const loadingElement = getByTestId( 'loading-element' );
+    expect(loadingElement).toBeInTheDocument();
+
     /**
      * Wait for the createItem promise to be resolved.
      */
     await wait(0);
-  })
+
+    /**
+     * Since the Item has already been created, there shouldn't
+     * be a loading element on the page.
+     */
+    expect(loadingElement).not.toBeInTheDocument();
+  });
 });

@@ -88,12 +88,12 @@ interface CustomImageData {
   selectedImage: File | null;
   srcImage: string;
   isImageToLarge: boolean;
-}
+};
 
 interface SelectImageProps {
   setImageData: Function,
   imageData: CustomImageData,
-}
+};
 
 function selectImage({ setImageData, imageData }: SelectImageProps) {
   let image;

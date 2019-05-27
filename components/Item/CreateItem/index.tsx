@@ -132,7 +132,6 @@ function CreateItem() {
   const [imageData, setImageData] = useState<SelectImageData>({ selectedImage: null, srcImage: '', isImageToLarge: false });
   const [price, setPrice] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const createItem = useCreateItemMutation();
   const classes = useStyles();
 
   
@@ -200,7 +199,7 @@ function CreateItem() {
                 Registrar artículo
               </Button>
             </div>
-            {isSubmitting ? <LinearProgress variant="query" />: null}
+            {isSubmitting ? <LinearProgress data-testid="loading-element" variant="query" />: null}
           </form>
 
           <Snackbar
