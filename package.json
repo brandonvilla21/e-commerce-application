@@ -32,10 +32,10 @@
     "next-with-apollo": "^3.4.0",
     "node-sass": "^4.11.0",
     "nprogress": "^0.2.0",
-    "react": "^16.8.4",
+    "react": "^16.9.0-alpha.0",
     "react-apollo": "^2.5.2",
     "react-apollo-hooks": "^0.4.5",
-    "react-dom": "^16.8.4",
+    "react-dom": "^16.9.0-alpha.0",
     "react-number-format": "^4.0.8"
   },
   "devDependencies": {
