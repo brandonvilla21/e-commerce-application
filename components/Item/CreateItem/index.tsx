@@ -7,12 +7,13 @@ import Snackbar from '@material-ui/core/Snackbar';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { makeStyles } from '@material-ui/styles';
-import { MutationFn } from 'react-apollo-hooks';
 import Dinero from 'dinero.js';
+import { MutationFn } from 'react-apollo';
 import {
-  useCreateItemMutation,
+  CreateItemComponent,
   CreateItemMutationVariables,
   CreateItemMutation,
+  
 } from '../../generated/apollo-components';
 import useForm from '../../../hooks/useForm';
 import SelectImage from './components/selectImage';
@@ -49,22 +50,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const CREATE_ITEM_MUTATION = gql`
-  mutation createItem(
-    $title: String!
-    $description: String!
-    $price: Int!
-    $imageFile: Upload!
-    $image: String
-    $largeImage: String
-  ) {
-    createItem(
-      title: $title
-      description: $description
-      imageFile: $imageFile
-      price: $price
-      image: $image
-      largeImage: $largeImage
-    ) {
+  mutation createItem($title: String!, $description: String!, $price: Int!, $imageFile: Upload!) {
+    createItem(title: $title, description: $description, price: $price, imageFile: $imageFile) {
       id
     }
   }
@@ -74,8 +61,6 @@ const initialState: CreateItemMutationVariables = {
   title: '',
   description: '',
   imageFile: null,
-  image: '',
-  largeImage: '',
   price: 0,
 };
 
@@ -91,15 +76,15 @@ async function submitItem(
 
     setIsSubmitting(true);
 
-    await Promise.all([
-      createItem({
-        variables: {
-          title: item.title,
-          description: item.description,
-          imageFile: imageData.selectedImage,
-          price: priceCents,
-        }
-      }),
+    const variables = {
+      title: item.title,
+      description: item.description,
+      price: priceCents,
+      imageFile: imageData.selectedImage,
+    };
+
+    const [result] = await Promise.all([
+      createItem({ variables }),
       // Wait at least 1.5 seconds to avoid abrupt UI changes. Little UX enhancement.
       wait(1500),
     ]);
