@@ -5,7 +5,7 @@ import { MuiThemeProviderProps } from '@material-ui/core/styles/MuiThemeProvider
 import { createGenerateClassName } from '@material-ui/styles';
 import { SheetsRegistry } from 'jss';
 
-const theme = createMuiTheme({
+export const theme = createMuiTheme({
   palette: {
     primary: {
       light: blue[300],
