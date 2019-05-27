@@ -9,7 +9,7 @@ generates:
       - typescript-react-apollo
     config:
       withHooks: true
-      withComponent: false
+      withComponent: true
       withHOC: false
   graphql.schema.json:
     plugins:
