@@ -132,82 +132,89 @@ function CreateItem() {
   const [imageData, setImageData] = useState<SelectImageData>({ selectedImage: null, srcImage: '', isImageToLarge: false });
   const [price, setPrice] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const createItem = useCreateItemMutation({ variables: initialState });
+  // const createItem = useCreateItemMutation();
   const classes = useStyles();
 
+  
+
   return (
-      <>
-        <form className={classes.root} onSubmit={e => submitItem(e, createItem, setIsSubmitting, { ...values, price}, imageData)}>
+    <CreateItemComponent mutation={CREATE_ITEM_MUTATION}>
+      {(createItem, data) => (
+        <>
+          <form className={classes.root} onSubmit={e => submitItem(e, createItem, setIsSubmitting, { ...values, price}, imageData)}>
 
-          <SelectImage setImageData={setImageData} imageData={imageData}/>
+            <SelectImage setImageData={setImageData} imageData={imageData}/>
 
-          <div className={classes.inputsContainer}>
+            <div className={classes.inputsContainer}>
+              <TextField
+                className={classes.field}
+                id="title"
+                name="title"
+                label="Título"
+                placeholder="Ingrese el título de su artículo"
+                margin="normal"
+                value={values.title}
+                onChange={handleChange}
+                type="text"
+                variant="outlined"
+              />
+
+              <NumberMaterialInputFormat
+                propsNumberFormat={{
+                  allowNegative: false,
+                  decimalScale: 2,
+                  value: price,
+                  prefix: '$ ',
+                  thousandSeparator: true,
+                  onValueChange: ({floatValue}: { floatValue: number }) => setPrice(floatValue)
+                }}
+
+                propsTextField={{
+                  className: classes.field,
+                  id: 'price',
+                  name: 'price',
+                  label: 'Precio',
+                  placeholder: 'Ingrese el precio de su artículo',
+                  margin: 'normal',
+                  variant: 'outlined',
+                }}
+              />
+            </div>
+
             <TextField
-              className={classes.field}
-              id="title"
-              name="title"
-              label="Título"
-              placeholder="Ingrese el título de su artículo"
+              id="description"
+              name="description"
+              label="Descripción"
+              placeholder="Ingrese la descripción de su artículo"
               margin="normal"
-              value={values.title}
+              value={values.description}
               onChange={handleChange}
               type="text"
+              multiline
+              rows="4"
               variant="outlined"
             />
 
-            <NumberMaterialInputFormat
-              propsNumberFormat={{
-                allowNegative: false,
-                decimalScale: 2,
-                value: price,
-                prefix: '$ ',
-                thousandSeparator: true,
-                onValueChange: ({floatValue}: { floatValue: number }) => setPrice(floatValue)
-              }}
+            <div className={classes.buttonContainer}>
+              <Button disabled={isFormInvalid({ ...values, price}, imageData)} className={classes.button} variant="contained" color="primary" type="submit">
+                Registrar artículo
+              </Button>
+            </div>
+            {isSubmitting ? <LinearProgress variant="query" />: null}
+          </form>
 
-              propsTextField={{
-                className: classes.field,
-                id: 'price',
-                name: 'price',
-                label: 'Precio',
-                placeholder: 'Ingrese el precio de su artículo',
-                margin: 'normal',
-                variant: 'outlined',
-              }}
-            />
-          </div>
+          <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left', }}
+          open={imageData.isImageToLarge}
+          ><SnackbarContentWrapper
+          variant="error"
+          noActions
+          message="La imagen que seleccionaste sobrepasa el límite de 1MB. Por favor selecciona una imagen más ligera."
+        /></Snackbar>
+        </>
+      )}
 
-          <TextField
-            id="description"
-            name="description"
-            label="Descripción"
-            placeholder="Ingrese la descripción de su artículo"
-            margin="normal"
-            value={values.description}
-            onChange={handleChange}
-            type="text"
-            multiline
-            rows="4"
-            variant="outlined"
-          />
-
-          <div className={classes.buttonContainer}>
-            <Button disabled={isFormInvalid({ ...values, price}, imageData)} className={classes.button} variant="contained" color="primary" type="submit">
-              Registrar artículo
-            </Button>
-          </div>
-          {isSubmitting ? <LinearProgress variant="query" />: null}
-        </form>
-
-        <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left', }}
-        open={imageData.isImageToLarge}
-        ><SnackbarContentWrapper
-        variant="error"
-        noActions
-        message="La imagen que seleccionaste sobrepasa el límite de 1MB. Por favor selecciona una imagen más ligera."
-      /></Snackbar>
-      </>
+    </CreateItemComponent>
   );
 }
 

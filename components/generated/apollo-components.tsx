@@ -325,8 +325,6 @@ export type CreateItemMutationVariables = {
   description: Scalars["String"];
   price: Scalars["Int"];
   imageFile: Scalars["Upload"];
-  image?: Maybe<Scalars["String"]>;
-  largeImage?: Maybe<Scalars["String"]>;
 };
 
 export type CreateItemMutation = { __typename?: "Mutation" } & {
@@ -345,6 +343,8 @@ export type LoginMutation = { __typename?: "Mutation" } & {
 };
 
 import gql from "graphql-tag";
+import * as React from "react";
+import * as ReactApollo from "react-apollo";
 import * as ReactApolloHooks from "react-apollo-hooks";
 
 export const CreateItemDocument = gql`
@@ -353,21 +353,32 @@ export const CreateItemDocument = gql`
     $description: String!
     $price: Int!
     $imageFile: Upload!
-    $image: String
-    $largeImage: String
   ) {
     createItem(
       title: $title
       description: $description
-      imageFile: $imageFile
       price: $price
-      image: $image
-      largeImage: $largeImage
+      imageFile: $imageFile
     ) {
       id
     }
   }
 `;
+
+export class CreateItemComponent extends React.Component<
+  Partial<
+    ReactApollo.MutationProps<CreateItemMutation, CreateItemMutationVariables>
+  >
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<CreateItemMutation, CreateItemMutationVariables>
+        mutation={CreateItemDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
 
 export function useCreateItemMutation(
   baseOptions?: ReactApolloHooks.MutationHookOptions<
@@ -392,6 +403,19 @@ export const LoginDocument = gql`
     }
   }
 `;
+
+export class LoginComponent extends React.Component<
+  Partial<ReactApollo.MutationProps<LoginMutation, LoginMutationVariables>>
+> {
+  render() {
+    return (
+      <ReactApollo.Mutation<LoginMutation, LoginMutationVariables>
+        mutation={LoginDocument}
+        {...(this as any)["props"] as any}
+      />
+    );
+  }
+}
 
 export function useLoginMutation(
   baseOptions?: ReactApolloHooks.MutationHookOptions<
