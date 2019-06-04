@@ -134,6 +134,11 @@ function CreateItem() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const classes = useStyles();
 
+  const sharedInputProps = {
+    inputProps: {
+      readOnly: isSubmitting,
+    }
+  };
   
 
   return (
@@ -156,6 +161,7 @@ function CreateItem() {
                 onChange={handleChange}
                 type="text"
                 variant="outlined"
+                {...sharedInputProps}
               />
 
               <NumberMaterialInputFormat
@@ -176,6 +182,7 @@ function CreateItem() {
                   placeholder: 'Ingrese el precio de su artículo',
                   margin: 'normal',
                   variant: 'outlined',
+                  ...sharedInputProps
                 }}
               />
             </div>
@@ -192,12 +199,18 @@ function CreateItem() {
               multiline
               rows="4"
               variant="outlined"
+              {...sharedInputProps}
             />
 
             <div className={classes.buttonContainer}>
-              <Button disabled={isFormInvalid({ ...values, price}, imageData)} className={classes.button} variant="contained" color="primary" type="submit">
-                Registrar artículo
-              </Button>
+              { isSubmitting ?
+                <Button disabled={isSubmitting} className={classes.button} variant="contained" color="primary" type="submit">
+                  Registrando artículo...
+                </Button> :
+                <Button disabled={isFormInvalid({ ...values, price}, imageData)} className={classes.button} variant="contained" color="primary" type="submit">
+                  Registrar artículo
+                </Button>
+              }
             </div>
             {isSubmitting ? <LinearProgress data-testid="loading-element" variant="query" />: null}
           </form>
