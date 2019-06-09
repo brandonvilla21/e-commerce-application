@@ -1,5 +1,3 @@
-import '../lib/bootstrap';
-// --- Post bootstrap -----
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import CreateItem from '../components/Item/CreateItem';

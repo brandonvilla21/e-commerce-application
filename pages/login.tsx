@@ -1,5 +1,3 @@
-import '../lib/bootstrap';
-// --- Post bootstrap -----
 import LoginForm from "../components/Login/LoginForm";
 import { makeStyles } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
