@@ -12,6 +12,7 @@ import { ApolloClient } from 'apollo-boost'
 import withPageContext, { PageContext } from '../lib/withPageContext';
 import { StylesProvider, ThemeProvider } from '@material-ui/styles';
 import { CssBaseline } from '@material-ui/core';
+import AppBar from '../components/Layout/AppBar';
 
 interface MyAppProps {
   apollo: ApolloClient<any>
@@ -59,9 +60,10 @@ class MyApp extends App<WithApolloClient<MyAppProps>> {
             >
               {/* ThemeProvider makes the theme available down the React tree thanks to React context. */}
               <ThemeProvider theme={this.pageContext.theme}>
-              {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-              <CssBaseline />
-              <Component pageContext={this.pageContext} {...pageProps} />
+                <AppBar/>
+                {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+                <CssBaseline />
+                <Component pageContext={this.pageContext} {...pageProps} />
               </ThemeProvider>
             </StylesProvider>
           </Page>
