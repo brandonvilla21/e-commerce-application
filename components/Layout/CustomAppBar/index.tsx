@@ -19,6 +19,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 import { eCommerceName, drawerWidth } from '../../../shared/globals';
 import ButtonLink from '../../shared/ButtonLink';
+import { removeDefaultAnchorStyles } from '../../../shared/globalStyles';
 
 const styles = (theme: Theme) => createStyles({
   root: {
@@ -126,6 +127,10 @@ const styles = (theme: Theme) => createStyles({
       display: 'none',
     },
   },
+  link: {
+    ...removeDefaultAnchorStyles,
+    display: 'flex',
+  }
 });
 
 interface PrimarySearchAppBarProps {
@@ -171,8 +176,12 @@ class PrimarySearchAppBar extends React.Component<PrimarySearchAppBarProps> {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
-        <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
+        <MenuItem onClick={this.handleMenuClose}>
+          <Link href="/login" prefetch>
+            <a className={classes.link}>Login</a>
+          </Link>
+        </MenuItem>
+
       </Menu>
     );
 
@@ -185,18 +194,14 @@ class PrimarySearchAppBar extends React.Component<PrimarySearchAppBarProps> {
         onClose={this.handleMobileMenuClose}
       >
         <MenuItem>
-          <IconButton color="inherit">
-            <Badge badgeContent={0} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <p>Notifications</p>
-        </MenuItem>
-        <MenuItem onClick={this.handleProfileMenuOpen}>
-          <IconButton color="inherit">
-            <AccountCircle />
-          </IconButton>
-          <p>Profile</p>
+          <Link href="/login" prefetch>
+            <a className={classes.link}>
+              <IconButton color="inherit">
+                <AccountCircle />
+              </IconButton>
+              <p>Login</p>
+            </a>
+          </Link>
         </MenuItem>
       </Menu>
     );
