@@ -14,13 +14,30 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { eCommerceName } from '../../../shared/globals';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-
+import classNames from 'classnames';
+import Link from 'next/link';
+import { eCommerceName, drawerWidth } from '../../../shared/globals';
+import ButtonLink from '../../shared/ButtonLink';
 
 const styles = (theme: Theme) => createStyles({
   root: {
     width: '100%',
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   toolbar: {
     [theme.breakpoints.down('sm')]: {
@@ -113,6 +130,8 @@ const styles = (theme: Theme) => createStyles({
 
 interface PrimarySearchAppBarProps {
   classes: any,
+  drawerOpen: boolean,
+  handleDrawerOpen: ((event: React.MouseEvent<HTMLElement, MouseEvent>) => void) | undefined,
 }
 
 class PrimarySearchAppBar extends React.Component<PrimarySearchAppBarProps> {
@@ -184,49 +203,61 @@ class PrimarySearchAppBar extends React.Component<PrimarySearchAppBarProps> {
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="fixed"
+          className={classNames(classes.appBar, {
+            [classes.appBarShift]: this.props.drawerOpen,
+        })}
+        >
           <Toolbar className={classes.toolbar}>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Open drawer">
-              <MenuIcon />
-            </IconButton>
-            <div className={classes.coreAppBar}>
-              <Typography className={classes.title} variant="h6" color="inherit">
-                {eCommerceName}
-              </Typography>
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
+            <>
+              {this.props.drawerOpen ||
+                <IconButton 
+                  className={classes.menuButton} 
+                  onClick={this.props.handleDrawerOpen}
+                  color="inherit" 
+                  aria-label="Open drawer">
+                  <MenuIcon />
+                </IconButton>
+              }
+              <div className={classes.coreAppBar}>
+                <Typography className={classes.title} variant="h6" color="inherit">
+                <ButtonLink href="/" hrefAs="/">{eCommerceName}</ButtonLink>
+                </Typography>
+                <div className={classes.search}>
+                  <div className={classes.searchIcon}>
+                    <SearchIcon />
+                  </div>
+                  <InputBase
+                    placeholder="Search…"
+                    classes={{
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
+                    }}
+                  />
                 </div>
-                <InputBase
-                  placeholder="Search…"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput,
-                  }}
-                />
               </div>
-            </div>
-            <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-              <IconButton color="inherit">
-                <Badge badgeContent={0} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                aria-owns={isMenuOpen ? 'material-appbar' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
-                <MoreIcon />
-              </IconButton>
-            </div>
+              <div className={classes.grow} />
+              <div className={classes.sectionDesktop}>
+                <IconButton color="inherit">
+                  <Badge badgeContent={0} color="secondary">
+                    <NotificationsIcon />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  aria-owns={isMenuOpen ? 'material-appbar' : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+              </div>
+              <div className={classes.sectionMobile}>
+                <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+                  <MoreIcon />
+                </IconButton>
+              </div>
+            </>
           </Toolbar>
         </AppBar>
         {renderMenu}
