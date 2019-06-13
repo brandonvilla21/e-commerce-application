@@ -251,6 +251,7 @@ class PrimarySearchAppBar extends React.Component<PrimarySearchAppBarProps> {
                   </Badge>
                 </IconButton>
                 <IconButton
+                  data-testid="custom-app-bar-acccount-icon"
                   aria-owns={isMenuOpen ? 'material-appbar' : undefined}
                   aria-haspopup="true"
                   onClick={this.handleProfileMenuOpen}
@@ -260,7 +261,12 @@ class PrimarySearchAppBar extends React.Component<PrimarySearchAppBarProps> {
                 </IconButton>
               </div>
               <div className={classes.sectionMobile}>
-                <IconButton aria-haspopup="true" onClick={this.handleMobileMenuOpen} color="inherit">
+                <IconButton
+                  data-testid="custom-app-bar-acccount-icon-mobile"
+                  aria-haspopup="true"
+                  onClick={this.handleMobileMenuOpen}
+                  color="inherit"
+                >
                   <MoreIcon />
                 </IconButton>
               </div>
