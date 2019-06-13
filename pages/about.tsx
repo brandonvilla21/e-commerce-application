@@ -21,9 +21,6 @@ function About() {
       <Typography variant="h4" gutterBottom>
         Ajalax Solutions
       </Typography>
-      <Typography variant="subtitle1" gutterBottom>
-        ayuwoki
-      </Typography>
       <Typography gutterBottom>
         <Link href="/">
           <a>Go to the main page</a>
