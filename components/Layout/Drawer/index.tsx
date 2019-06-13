@@ -15,6 +15,7 @@ import { drawerWidth } from '../../../shared/globals';
 import uuid from 'uuid/v4';
 import Link from 'next/link';
 import { ListItem, ListItemIcon, List, ListItemText } from '@material-ui/core';
+import { listItemsTexts } from '../sharedLayoutInfo';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -107,44 +108,42 @@ function CustomDrawer({ currentComponent }: CustomDrawerProps) {
         open={drawerOpen}
       >
         <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
+          {
+            drawerOpen ?
+            <IconButton onClick={handleDrawerClose} data-testid="drawer-open-arrow-icon">
+              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+            : null
+          }
         </div>
         <Divider />
-        {/* <div>
-          <IconButton aria-label="Homepage">
-            <HomeTwoTone />
-          </IconButton>
-        </div> */}
         <List>
             <Link href="/" key={uuid()} prefetch>
               <a>
-                <ListItem button>
+                <ListItem button data-testid="drawer-list-item">
                   <ListItemIcon><HomeTwoTone /></ListItemIcon>
-                  <ListItemText primary="Homepage" />
+                  <ListItemText primary={listItemsTexts.homepage} />
                 </ListItem>
             </a>
             </Link>
 
             <Link href="/sell" key={uuid()} prefetch>
               <a>
-                <ListItem button>
+                <ListItem button data-testid="drawer-list-item">
                   <ListItemIcon><AddTwoTone /></ListItemIcon>
-                  <ListItemText primary="Sell new article" />
+                  <ListItemText primary={listItemsTexts.sellNewArticle} />
                 </ListItem>
             </a>
             </Link>
 
             <Link href="/about" key={uuid()} prefetch>
               <a>
-                <ListItem button>
+                <ListItem button data-testid="drawer-list-item">
                   <ListItemIcon><PeopleTwoTone /></ListItemIcon>
-                  <ListItemText primary="About" />
+                  <ListItemText primary={listItemsTexts.about} />
                 </ListItem>
             </a>
             </Link>
-
         </List>
       </Drawer>
       <main className={classes.content}>

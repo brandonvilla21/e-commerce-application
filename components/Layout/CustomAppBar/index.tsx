@@ -220,7 +220,9 @@ class PrimarySearchAppBar extends React.Component<PrimarySearchAppBarProps> {
                   className={classes.menuButton} 
                   onClick={this.props.handleDrawerOpen}
                   color="inherit" 
-                  aria-label="Open drawer">
+                  aria-label="Open drawer"
+                  data-testid="main-app-bar-menu-icon"
+                  >
                   <MenuIcon />
                 </IconButton>
               }
